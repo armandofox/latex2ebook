@@ -1,0 +1,9 @@
+GEM
+  specs:
+    nokogiri (1.5.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  nokogiri

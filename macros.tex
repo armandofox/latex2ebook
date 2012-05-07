@@ -1,0 +1,548 @@
+\setcounter{errorcontextlines}{400}
+
+% line breaking tolerances
+\tolerance=1000  % usually 200, infinite=10000
+% last ditch effort: how much space OK to insert
+%   in a line to avoid overfull
+\setlength{\emergencystretch}{3em}  
+
+% write metadata about screencasts to output file
+\newwrite\screencastdata
+\openout\screencastdata=\jobname.screencasts
+
+\ifhtmloutput
+%    \newcommand{\mtctitle}{}
+\else
+    \usepackage{minitoc}
+    \renewcommand{\mtctitle}{}
+    \usepackage[dvips,color,innerbars]{changebar}
+\fi
+\usepackage{xstring}  % provides StrSubstitute
+\usepackage{natbib}
+% natbib redefines the bibliography environment, so we have to override
+% its definition after loading it to make the chapter bibs section-like
+% rather than chapter-like
+\makeatletter
+  \renewenvironment{thebibliography}[1]
+       {%\addtocounter{section}{1}
+        %\section*{References In This Chapter}%
+        \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+        \list{\@biblabel{\@arabic\c@enumiv}}%
+             {\settowidth\labelwidth{\@biblabel{#1}}%
+              \leftmargin\labelwidth
+              \advance\leftmargin\labelsep
+              \@openbib@code
+              \usecounter{enumiv}%
+              \let\p@enumiv\@empty
+              \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+        \sloppy
+        \clubpenalty4000
+        \@clubpenalty \clubpenalty
+        \widowpenalty4000%
+        \sfcode`\.\@m}
+       {\def\@noitemerr
+         {\@latex@warning{Empty `thebibliography' environment}}%
+        \endlist}
+\makeatother
+
+\usepackage{bibunits}
+\usepackage{ifthen}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage{verbatim}
+%\usepackage[font=small,labelfont=bf,margin=10pt]{caption}
+
+% Textual ``figures''
+\ifhtmloutput
+  \newenvironment{textfigure}{}{}
+\else
+  \newenvironment{textfigure}{\hrule\small}{\vspace{0.5ex}\hrule}
+\fi
+
+% highlighting deltas from a previous explanation
+
+\ifhtmloutput
+  \newenvironment{changebar}{\HCode{<span class="changebar">}}{\HCode{</span>}}
+\else
+    \setlength{\changebarwidth}{0.5em}
+    \definecolor{ChangebarColor}{rgb}{0.05,0,0.5} 
+    \cbcolor{ChangebarColor}
+\fi
+\usepackage{endnotes}
+\usepackage{listings} \input{listingdefaults}
+\usepackage[figuresright]{rotating} 
+\usepackage{floatpag} 
+\rotfloatpagestyle{empty} 
+\usepackage{makeidx}
+  \makeindex
+\usepackage{enumerate}
+\usepackage{fancybox}
+
+\usepackage{hyperref}
+  \ifhtmloutput
+    \hypersetup{hyperfootnotes=false}
+  \fi
+
+
+%\usepackage{glossaries}
+
+% shortcuts
+\newcommand{\fillinblank}{\_\_\_\_}
+\newcommand{\n}{\tabularnewline}
+\newcommand{\tg}{\textgreater}
+\newcommand{\tl}{\textless}
+\newcommand{\ttil}{\textasciitilde}
+\newcommand{\tcaret}{\textasciicircum}
+\ifhtmloutput
+  \ifmobioutput
+   \newcommand{\T}[1]{\HCode{<tt>}#1\HCode{</tt>}}
+   \newcommand{\B}[1]{\HCode{<strong>}#1\HCode{</strong>}}
+   \newcommand{\Sf}[1]{\HCode{<span class="sans-serif">}#1\HCode{</span>}}
+   \newcommand{\C}[1]{\HCode{<span style="color: \#800;"><tt>}#1\HCode{</tt></span>}}
+  \else
+   \newcommand{\T}[1]{\HCode{<span class="typewriter">}#1\HCode{</span>}}
+   \newcommand{\B}[1]{\HCode{<span class="strong">}#1\HCode{</span>}}
+   \newcommand{\Sf}[1]{\HCode{<span class="sans-serif">}#1\HCode{</span>}}
+   \newcommand{\C}[1]{\HCode{<span class="code-example">}#1\HCode{</span>}}
+  \fi
+\else
+  \newcommand{\T}{\texttt}
+  \newcommand{\B}{\textbf}
+  \newcommand{\Sf}[1]{\textsf{\emph{#1}}}
+  %\definecolor{TextHighlight}{rgb}{0.05,0,0.50}
+  \definecolor{TextHighlight}{rgb}{0.1,0.1,0.1}
+  \newcommand{\C}[1]{\textsf{\upshape{\textbf{#1}}}}
+\fi
+
+% make caption font smaller (tip from 
+% http://dcwww.camd.dtu.dk/~schiotz/comp/LatexTips/LatexTips.html#captfont)
+\newcommand{\captionfonts}{\scriptsize\bf}
+\ifhtmloutput
+ %
+\else
+  \makeatletter  % Allow the use of @ in command names
+  \long\def\@makecaption#1#2{%
+   \begin{centering}
+    \vskip\abovecaptionskip % space between figure & caption
+    \sbox\@tempboxa{{\captionfonts #1: #2}}%
+    \ifdim \wd\@tempboxa >\hsize
+      {\captionfonts #1: #2\par}
+    \else
+      \hbox to\hsize{\hfil\box\@tempboxa\hfil}%
+    \fi
+    \end{centering}
+    \vskip\belowcaptionskip% space between caption & text
+  }
+  \makeatother   % Cancel the effect of \makeatletter
+\fi
+
+% hyperlinks
+
+\ifhtmloutput
+  \newcommand{\weblink}[2]{\href{#1}{#2}}
+\else
+  \newcommand{\weblink}[2]{#2\endnote{\expandafter \url{#1}}}
+  %\newcommand{\weblink}[2]{#2 ({\url{#1}})}
+\fi
+
+
+% Quotation in small-ish type with attribution
+% Example use:  
+%  \makequotation{There's a sucker born every minute.}{W.C. Fields}
+
+\ifhtmloutput
+ \ifmobioutput
+  \newcommand{\makequotation}[2]{\HCode{%
+     <div class="makequotation" align="center">
+      <table cellpadding="10" style="margin-left: 0;">
+        <tr><td align="center" border="1" style="background-color: \#c0c0c0">}%
+        #1\HCode{<i>} #2\HCode{</i>
+        </td></tr>
+      </table>
+     </div>}}
+ \else
+  \newcommand{\makequotation}[2]{\begin{quote}\small\emph{#1} ---#2\end{quote}}
+ \fi
+\else
+  \newcommand{\makequotation}[2]{\begin{quote}\small\emph{#1}
+
+  \hfill---#2\end{quote}}
+\fi
+
+% Chapter front matter (used only by html build)
+\newenvironment{chapterfrontmatter}{}{}
+
+% Chapter overview (key messages)
+% Example use:
+%  \chapteroverview{User stories are important. Let's learn about them.}
+%
+%  implemented as Subsection for TOC inclusion:
+\newcommand{\chapteroverview}[1]{
+  \addtocontents{toc}{#1}
+  \subsection*{#1}
+  \vspace{0.25in}
+  \ifhtmloutput\else\minitoc\fi
+  \vfill\clearpage}
+
+% Sidebar - appearance will vary depending on output target, and may not
+% actually be along the side.
+% Example use:
+%   \begin{sidebar}{Historical note}
+%     All this stuff will be in a sidebar.
+%     You can include most elements that would go in normal text, like
+%     figures, citations, etc.
+%   \end{sidebar}
+
+\definecolor{SidebarColor}{rgb}{0.9,0.9,0.9}
+\ifhtmloutput
+  \newenvironment{sidebar}[2][]%
+    {\HCode{<span class="sidebar_name"><b><i>}#2{\HCode{</i></b></span>}}}
+    {}
+\else
+  \newcommand{\thesidebarraise}{}
+  \newenvironment{sidebar}[2][-2ex]%
+    {\renewcommand{\thesidebarraise}{#1}%
+     \begin{Sbox}\begin{minipage}{\marginparwidth}\sidebarfont\raggedright \textbf{#2}}%
+    {\end{minipage}\end{Sbox}\marginpar{\vspace{\thesidebarraise}\colorbox{SidebarColor}{\TheSbox}}}
+\fi
+
+% Sidebars with photos - need to be small in PDF Output
+% Small Kindle is 520x622 px; images 260x311 or smaller won't be resized on device
+\ifhtmloutput
+  \ifmobioutput
+    \newenvironment{sidebargraphic}[3][]%
+      {\HCode{<img width="150" src="#2_SB.jpg"/>}
+       \HCode{<span class="sidebar_name"><b><i>}#3{\HCode{</i></b></span>}}}
+      {}
+  \else
+    \newenvironment{sidebargraphic}[3][]%
+      {\HCode{<img class="sidebarimage" src="#2.jpg">}
+       \HCode{<span class="sidebar_name">}#3\HCode{</span>}}
+      {}
+  \fi
+\else
+  \newcommand{\thesidebarimg}{}% hack- numbered params can't appear in end content of \newenvironment
+  \newenvironment{sidebargraphic}[3][0in]%
+    {\renewcommand{\thesidebarraise}{#1}%
+     \renewcommand{\thesidebarimg}{#2}%
+     \begin{Sbox}\begin{minipage}{\marginparwidth}\sidebarfont\raggedright \textbf{#3}}%
+    {\hfill\\ \includegraphics[width=\marginparwidth]{\thesidebarimg}\end{minipage}\end{Sbox}\marginpar{\vspace{\thesidebarraise}\colorbox{SidebarColor}{\TheSbox}}}
+\fi
+
+
+
+% Endnotes - in print version, footnotes/endnotes come at end of
+% chapters
+
+\newenvironment{tolearnmore}{\section{To Learn More}}{%
+  % per-chapter bibliography
+  \putbib
+  % Endnotes
+  \ifhtmloutput\else%
+    \theendnotes
+    \setcounter{endnote}{0}
+  \fi
+}
+
+% Code - uses \verbatiminput to put in file 'undecorated' for HTML use,
+% or \lstlisting to decorate it with styling and line numbers for PDF
+\ifhtmloutput
+ \ifmobioutput
+  \newcommand{\codefile}[2][u/saasbook]{\HCode{<a class="pastebin" href="http://pastebin.com/#1">http://pastebin.com/#1</a><br/><pre class="code">}
+
+    \begin{minipage}{\textwidth}% prevent gratuitous blank lines
+    \verbatiminput{#2}%
+    \end{minipage}%
+    \HCode{</pre><hr>}}
+ \else
+  \newcommand{\codefile}[2][u/saasbook]{\HCode{<a class="pastebin" href="http://pastebin.com/#1">http://pastebin.com/#1</a><pre class="code">}
+    \verbatiminput{#2}
+
+    \HCode{</pre>}}
+ \fi 
+\else
+  \newcommand{\codefile}[2][u/saasbook]{%
+    \noindent\begin{minipage}{\textwidth}%
+    \Sf{\scriptsize{}http://pastebin.com/#1}%
+    \vspace{-1ex}%
+    \lstinputlisting{#2}%
+    \end{minipage}}
+\fi
+
+% Fallacies and pitfalls
+%  \begin{fallacy}{The moon is made of green cheese.}
+%    It really isn't.
+%  \end{fallacy}
+
+\ifhtmloutput
+  \newcommand{\fallaciesandpitfalls}{}
+\else
+  \newcommand{\fallaciesandpitfalls}{%
+  ~\vspace{-1.5ex}
+
+  }
+\fi
+
+\ifhtmloutput
+ \ifmobioutput
+  \newenvironment{fallacy}[1]%
+    {\HCode{<img src="icons/mobi/fallacy.png"><span style="font-weight: bold; color: red;">Fallacy: }#1\HCode{</span> }}
+    {}
+  \newenvironment{pitfall}[1]%
+    {\HCode{<img src="icons/mobi/pitfall.png"><span style="font-weight: bold; color: red;">Pitfall: }#1\HCode{</span> }}
+    {}
+ \else
+  \newenvironment{fallacy}[1]{\Picture{icons/fallacy.png class="marginicon"}\B{\emph{Fallacy:} #1}}{}
+  \newenvironment{pitfall}[1]{\Picture{icons/pitfall.png class="marginicon"}\B{\emph{Pitfall:} #1}}{}
+ \fi
+\else
+  \newcommand{\iconwithtext}[3]{%
+     \vspace{1ex}%
+     \hspace{-\parindent}%
+     \begin{tabular}{b{0.25in}b{4.5in}}%
+       \includegraphics[width=0.25in]{icons/#1} & \B{\emph{#2: }\/#3} \\ %
+     \end{tabular}%
+     \vspace{1ex}}
+  \newenvironment{fallacy}[1]%
+    {\iconwithtext{fallacy.pdf}{Fallacy}{#1}
+
+    }
+    {\vspace{0.5ex}}
+  \newenvironment{pitfall}[1]%
+    {\iconwithtext{pitfall.pdf}{Pitfall}{#1}
+
+    }
+    {\vspace{0.5ex}}
+\fi
+ 
+% Pull in Exercises
+\newcommand{\exercises}[1]{\input{ch_#1/exercises_#1}}
+                       
+% Screencast - in print version, just a URL link; in HTML5 version,
+% embedded quicktime player or youtube player??
+
+\newcounter{screencast}[section]
+\renewcommand*\thescreencast{\thesection.\arabic{screencast}}
+\newcommand{\screencastprefix}{http://vimeo.com/}
+\newcommand{\screencastsuffix}{}
+
+\newcommand{\screencast}[5][saasbook/videos]{%
+  \refstepcounter{screencast}
+  \label{#2}\relax%
+  % write metadata to output file
+  \write\screencastdata{\thescreencast: #2@@#3@@#4##@5}
+  %
+  \ifhtmloutput
+     \ifmobioutput
+        \HCode{<hr>
+               <div class="screencast"> Screencast \thescreencast: <a class="screencast-url" %
+               href="\screencastprefix#1\screencastsuffix">#3</a>}%
+        \HCode{<div class="screencastsummary">}#5\HCode{</div></div>
+               <hr>}
+     \else
+         \HCode{<div class="screencast"><h2>Screencast \thescreencast: <span class="screencast_title">}#3\HCode{</span></h2>}
+         \HCode{ <video src="#4" width="600" controls="controls">}
+         \HCode{   <!-- for browsers that don't support embedded video tag -->}
+         \HCode{   <a class="screencast-url" href="\screencastprefix#1\screencastsuffix">Watch on Vimeo</a>}
+         \HCode{ </video>}
+         \HCode{<div class="screencastsummary">}#5\HCode{</div></div>}
+     \fi
+  \else
+    \hfill
+     \begin{minipage}{0.9\textwidth}
+       \rule{\textwidth}{0.5pt}\hfill\\
+       \small\textbf{Screencast \thescreencast: #3.} \\
+       \url{\screencastprefix#1\screencastsuffix}\\
+       #5\relax \\
+       \rule{\textwidth}{0.5pt}\hfill\\
+     \end{minipage}
+    \hfill
+  \fi
+}
+
+% Elaboration - optional material that's longer than a sidebar
+
+%\definecolor{ElaborationColor}{rgb}{0.05,0.0,0.50}
+\definecolor{ElaborationColor}{rgb}{0.1,0.1,0.1}
+\ifhtmloutput
+ \ifmobioutput
+  \newenvironment{elaboration}[1]%
+    {\HCode{<hr><b>E</b><small><b>LABORATION:</b> #1<br/> }}
+    {\HCode{</small><hr>}}
+ \else
+  \newenvironment{elaboration}[1]%
+    {\HCode{<span class="elaboration_name">#1</span> }}
+    {}
+ \fi
+\else
+  \newcommand{\aboveelaborationskip}{1.5ex}
+  \newcommand{\belowelaborationskip}{1.5ex}
+  \newcommand{\elaborationpadding}{0.5ex}
+  \newenvironment{elaboration}[1]%
+    {\color{ElaborationColor} %
+      \begin{Sbox}\begin{minipage}[r]{0.9\textwidth}%
+          \vspace{\aboveelaborationskip}
+          \rule{\textwidth}{2pt}
+          \vspace{\elaborationpadding}
+          \rule{1ex}{1ex}\hspace{2pt}\small\emph{\textbf{Elaboration: #1\relax}}
+          \vspace{\elaborationpadding}
+          \hrule
+          \vspace{\elaborationpadding}
+    }%
+    {\vspace{\elaborationpadding}
+     \hrule
+     \end{minipage}\end{Sbox}
+     \hfill\mbox{\TheSbox}
+     \vspace{\belowelaborationskip}
+    }
+\fi
+
+% LaTeX macros that aren't automatically translated to HTML
+\ifhtmloutput
+  \renewcommand{\copyright}{\HCode{&copy;}}
+\fi
+
+% forced page breaks
+\ifhtmloutput
+  \newcommand{\flushpage}{\clearpage\HCode{<mbp:pagebreak/>}}
+\else
+  \newcommand{\flushpage}{\clearpage}
+\fi
+
+% graphics - for HTML/mobi, use the gif version
+\ifhtmloutput
+  \newcommand{\picfigure}[4][width=\textwidth]{%
+    \begin{figure}
+     \Picture{#2.gif id="#3"}
+       \ifthenelse{\equal{#4}{}}{}{\caption{\label{#3}#4}}
+    \end{figure}}   
+\else
+  \newcommand{\picfigure}[4][width=\textwidth]{%
+    \begin{figure}
+     \includegraphics[#1]{#2}
+     \ifthenelse{\equal{#4}{}}{}{\caption{\label{#3}#4}}
+    \end{figure}}
+\fi
+
+% table figures - will eventually do something different for mobi
+\newcommand{\tablefigure}[3]{%
+  \begin{figure}
+    \input{#1}
+    \caption{\label{#2}%
+#3}
+  \end{figure}
+}
+
+
+% Summary - key points summarizing a chapter or section
+
+\ifhtmloutput
+  \ifmobioutput
+    \newenvironment{summary}{}{}
+  \else
+    \newenvironment{summary}%
+      {\HCode{<div class="summary">}}%
+      {\HCode{</div>}}
+  \fi
+\else
+  \renewcommand{\shadowsize}{2pt}
+  \newenvironment{summary}%
+    {\vspace{2ex}\begin{Sbox}\begin{minipage}{0.96\textwidth}\noindent}
+    {\vspace{0.25\baselineskip}\end{minipage}\end{Sbox}\noindent\hspace{0in}\shadowbox{\TheSbox}}
+\fi
+   
+% Note to self
+\newcommand{\note}[1]{\fbox{#1}}
+
+% DRYing out codefile examples
+\newcommand{\codefilefigure}[4][u/saasbook]{%  filename, reflabel, caption
+  \begin{figure}
+  \codefile[#1]{#2}
+  \caption{\label{#3}
+   #4
+  }
+  \end{figure}%
+}
+
+% Crosscutting themes - icon or note in margin
+\ifhtmloutput
+ \ifmobioutput
+  \newcommand{\crosscutting}[2]{%
+    \HCode{<img align="right" width="40" src="icons/mobi/#2.png"/>&nbsp;}}
+ \else
+  \newcommand{\crosscutting}[2]{%
+    \HCode{<img class="crosscutting" src="icons/#2.png"/>&nbsp;}}
+ \fi
+\else
+  \newcommand{\crosscutting}[2]{%
+    \marginpar{\vspace{#1}\includegraphics[width=0.5in]{icons/#2.png}}}
+\fi
+\newcommand{\dry}[1][0.5ex]{\crosscutting{#1}{dry}}
+\newcommand{\reuse}[1][0.5ex]{\crosscutting{#1}{reuse}}
+\newcommand{\codegen}[1][0.5ex]{\crosscutting{#1}{codegen}}
+\newcommand{\concise}[1][0.5ex]{\crosscutting{#1}{concise}}
+\newcommand{\coc}[1][0.5ex]{\crosscutting{#1}{coc}}
+\newcommand{\legacy}[1][0.5ex]{\crosscutting{#1}{legacy}}
+\newcommand{\beauty}[1][0.5ex]{\crosscutting{#1}{beauty}}
+\newcommand{\tool}[1][0.5ex]{\crosscutting{#1}{tool}}
+\newcommand{\learnbydoing}[1][0.5ex]{\crosscutting{#1}{learnbydoing}}
+\newcommand{\automation}[1][0.5ex]{\crosscutting{#1}{automation}}
+
+% ``Learn by doing''
+
+% Table of contents formatting
+\setcounter{tocdepth}{5}
+%\newcommand{\chapteroverview}[1]{\addcontentsline{toc}{section}{#1}}
+
+\newcommand{\gloss[1]}{\textbf{#1}}
+
+% Exercises
+\newtheorem{exercise}{Exercise}[chapter]
+% Check Yourself
+\newtheorem{checkyourself}{Self-Check}[section]
+% answers embedded in self-checks
+\ifhtmloutput
+  \ifmobioutput
+    \newenvironment{answer}{\HCode{<img height="15" width="15" src="icons/mobi/green_dot.gif"/>}}{}
+  \else
+    \newenvironment{answer}{}{}
+  \fi    
+\else
+  \newenvironment{answer}%
+    {\hfill \\ \noindent\upshape$\diamond$ }%
+    {\rule{1ex}{1ex}~~}
+\fi
+
+% answers to exercises: omit from book, collect elsewhere
+%\newenvironment{exanswer}{}{}
+\let\exanswer=\comment
+\let\endexanswer=\endcomment
+
+
+% Wikipedia link
+
+\newcommand{\w}[2][]{%
+  \ifhtmloutput
+    \ifthenelse{\equal{#1}{}}{%
+      \StrSubstitute{#2}{ }{_}[\thewikilink]%
+      \weblink{http://en.wikipedia.org/wiki/\thewikilink}{\emph{\B{#2}}}%
+    }{%
+      \StrSubstitute{#1}{ }{_}[\thewikilink]%
+      \weblink{http://en.wikipedia.org/wiki/\thewikilink}{\emph{\B{#2}}}%
+    }%
+  \else%
+    \textsf{\slshape\B{#2}}%
+  \fi%
+  \ifhtmloutput%
+  \else%
+    \index{#2}%
+    \ifthenelse{\equal{#1}{}}{}{\index{#1}}%
+    \relax%
+  \fi%
+}
+
+
+% important term - not a link
+\newcommand{\x}[1]{\emph{\B{#1}}}

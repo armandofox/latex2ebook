@@ -1,0 +1,95 @@
+% book version - referenced by some other macros, but optional for you
+\newcommand{\bookversion}{1.0}
+
+%  load macros, some of which depend on the above switches
+\input{macros}
+
+% Enable compilation of just a single chapter at a time.
+% \onechap will be defined as TRUE in only.tex if it
+% exists, and used in an \includeonly below.
+\IfFileExists{only.tex}%
+     {\input{only}}%
+     {\def\onechap{FALSE}}
+
+% partial compilation?
+\ifthenelse{\equal{\onechap}{FALSE}}%
+           {\newif\ifwholebook\wholebooktrue}%  full compilation
+           {\newif\ifwholebook\wholebookfalse}%   partial compilation
+
+% ::EDITME::
+% comment out the following if you DON'T want ``Draft:'' watermark
+% when you generate individual chapters
+\ifwholebook
+\else
+  \usepackage{draftwatermark}
+  \SetWatermarkText{DRAFT: Do Not Distribute}
+  \SetWatermarkScale{0.4}
+\fi
+
+\begin{document}
+  \raggedbottom
+  % make true PDF page size match logical page size (for pdflatex)
+  % to change physical paper size, edit \paperwidth and \paperheight 
+  % in book.cls or whatever class file you're using
+  \ifhtmloutput
+  \else
+    \special{papersize=\paperwidth,\paperheight}
+    \setlength{\pdfpagewidth}{\paperwidth}
+    \setlength{\pdfpageheight}{\paperheight}
+  \fi
+    
+  % ::EDITME::
+  \title{Your Title Here}
+  \author{Your Name Here}
+  \pagestyle{headings}
+
+  \ifhtmloutput
+    % define XHTML outputs for different book elements
+    \ifmobioutput \input{mobi.4ht} \else \input{html.4ht} \fi %
+  \else
+    %
+  \fi
+  \ifwholebook%
+    \maketitle%
+    % title page with CIP data
+    \input{titlepage}% title page, copyright info
+    \ifhtmloutput
+      \ifmobioutput
+        \tableofcontents
+      \else
+        \CutAt{chapter,likesubsubsection}
+      \fi
+    \else
+      \dominitoc  % remove to suppress per-chapter mini-TOCs
+      \thispagestyle{empty}\tableofcontents
+    \fi
+  \fi
+
+  % bibliography per-chapter (requires bibunits package)
+  \defaultbibliographystyle{abbrvnat}
+  \bibpunct{}{}{;}{a}{}{,}
+  \defaultbibliography{saasbook}
+  \bibliographyunit[\chapter]
+
+  % ::EDITME::
+  % Add your chapters here:
+  % \include{ch_foreword/foreword} 
+  % \include{ch_intro/intro} 
+  %  etc.
+  % all chapters after the \appendix directive are treated as appendices:
+  \appendix
+  % \include{ch_app1/app1}
+
+  % back matter: bibliography, indices, etc.
+
+  % ::EDITME::
+  % uncomment only if you REMOVED the per-chapter bibliography stuff above:
+  %\bibliographystyle{authordate1}
+  %\bibliography{saasbook}
+  \ifhtmloutput
+    % suppress index for HTML, Kindle versions
+  \else
+    \ifwholebook \printindex \fi
+  \fi
+
+\end{document}

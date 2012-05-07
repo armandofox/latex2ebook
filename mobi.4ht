@@ -1,0 +1,121 @@
+%  -*- mode: latex -*-
+% HTML information for Kindle/Mobipocket HTML conversion
+
+
+\newcommand{\wrapwithdiv}[1]{
+  \ConfigureEnv{#1}
+    {\HCode{<div class="}#1\HCode{">}}
+    {\HCode{</div>}}
+    {}
+    {}
+}
+\wrapwithdiv{selfcheck}
+\wrapwithdiv{exercise}
+\wrapwithdiv{answer}
+
+\ConfigureEnv{minipage}{}{}{}{}
+  
+\Configure{tableofcontents}
+  {\HCode{<a name="TOC"/>}}% required for Kindle to find the TOC
+  {}
+  {}
+  {}
+
+\ConfigureToc{chapter}{\HCode{<br/>}}{~}{}{\HCode{<br/>}}
+\ConfigureToc{likechapter}{\HCode{<br/>}}{~}{}{\HCode{<br/>}}
+\ConfigureToc{appendix}{\HCode{<br/>Appendix }}{~}{}{\HCode{<br/>}}
+\ConfigureToc{section}{~~~}{~}{}{\HCode{<br/>}}
+\ConfigureToc{likesection}{~~~}{~}{}{\HCode{<br/>}}
+
+\ConfigureToc{likesubsection}%
+  {\HCode{<div class="toc_subsection" align="center">
+            <table cellpadding="10">
+            <tr><td width="2\%"></td>
+                <td align="left" style="background-color: \#f0f0f0;">}}
+  {~}
+  {}
+  {\HCode{</td></tr></table></div>}}
+\NoLink{likesubsection}  % chapter summaries in TOC shouldn't be links
+
+% Put a mini-TOC of the sections of a chapter at the start of each chapter
+\TocAt*{chapter,section}
+
+\Configure{chapter}
+  {}
+  {}
+  {\HCode{<mbp:pagebreak/><br/><br/><br/><h2 class="chapter_name"><i>}\thechapter{}. }
+  {\HCode{</i></h2>}}
+
+\Configure{likechapter}
+  {}
+  {}
+  {\HCode{<mbp:pagebreak/><br/><br/><br/><h2 class="chapter_name"><i>}}
+  {\HCode{</i></h2>}}
+
+\Configure{appendix}
+  {}
+  {}
+  {\HCode{<mbp:pagebreak/><br/><br/><br/><h2 class="chapter_name"><i>}Appendix \thechapter. }
+  {\HCode{</i></h2>}}
+
+\ConfigureEnv{sidebar}
+  {\HCode{%
+    <div class="sidebar" align="center">%
+      <table cellpadding="10">%
+        <tr><td width="2\%" style="background-color: \#404040;"></td>%
+            <td align="left" style="background-color: \#f0f0f0;"><p width="0"><small>}}
+  {\HCode{%
+        </small></p></td></tr>%
+        </table></div>}}
+  {}
+  {}
+
+\ConfigureEnv{sidebargraphic}
+  {\HCode{%
+    <div class="sidebar" align="center">%
+      <table cellpadding="10">%
+        <tr><td width="2\%" style="background-color: \#404040;"></td>%
+            <td align="left" style="background-color: \#f0f0f0;">}}
+  {\HCode{%
+        </td></tr>%
+        </table></div>}}
+  {}
+  {}
+
+\ConfigureEnv{summary}
+  {\HCode{%
+    <hr><div class="summary" bgcolor="\#c0c0c0">}}%
+  {\HCode{</div><hr>}}
+  {}
+  {}
+
+\ConfigureEnv{tabular}{}{}
+\ConfigureEnv{array}{}{}
+\Configure{centerline}{\HCode{<center>}}{\HCode{</center}}
+\ConfigureEnv{figure}{}{}{}{}
+
+\ConfigureEnv{textfigure}
+  {\HCode{<div>}}
+  {\HCode{</div>}}
+  {}
+  {}
+
+\Configure{tabular}
+  {\HCode{<table class="texttable" border="0">}} % at start of  table
+  {\HCode{</table>}}  % at end of table
+  {\HCode{<tr>}}  % at beginning of row
+  {\HCode{</tr>}}  % at end of row
+  {\HCode{<td  align="left" \ifnum\HMultispan>1 colspan="\HMultispan"\fi>}} % atbeginning of cell
+  {\HCode{</td>}}  % at end of cell
+
+\Configure{caption}
+  {\HCode{%
+    <div class="caption" align="center">%
+      <table cellpadding="10">%
+        <tr><td align="left" style="background-color: \#c0c0c0;"><p width="0"><small><b>}}
+  {: \HCode{</b>} }
+  {}
+  {\HCode{%
+        </small></p>
+        </td></tr>%
+        </table></div>}}

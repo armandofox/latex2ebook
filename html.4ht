@@ -1,0 +1,108 @@
+% -*- mode: latex -*-
+\Configure{DOCTYPE}{\HCode{<!DOCTYPE html>}}
+
+\newcommand{\wrapwithdiv}[1]{
+  \ConfigureEnv{#1}
+    {\HCode{<div class="#1">}}
+    {\HCode{</div>}}
+    {}
+    {}
+}
+  
+
+\wrapwithdiv{fallacy}
+\wrapwithdiv{pitfall}
+\wrapwithdiv{exercise}
+\wrapwithdiv{answer}
+\wrapwithdiv{sidebar}
+\wrapwithdiv{sidebargraphic}
+
+\ConfigureEnv{elaboration}
+  {\HCode{<div class="elaboration"><span class="elabname">Elaboration: </span>}}
+  {\HCode{</div>}}
+  {}
+  {}
+
+% Syntax for customizing sectional headings (LaTeX Web Companion, p.175):
+% \Configure{unit}{beforemarkup}{aftermarkup}{beforesectionname}{aftersectionname}
+% use \ConfigureToc instead of \Configure to control TOC entry generation
+%% \Configure{tableofcontents}
+%%   {\HCode{<!-- begin TOC -->}}
+%%   {\HCode{</div>} \input{footer} \HCode{</div><!-- end TOC -->}}
+%%   {}
+%%   {\HCode{<br/>}}
+%%   {\HCode{<br/>}}
+
+%% \ConfigureToc{chapter}{\HCode{<br/>}}{~}{}{\HCode{<br/>}}
+%% \ConfigureToc{likechapter}{\HCode{<br/>}}{~}{}{\HCode{<br/>}}
+%% \ConfigureToc{section}{~~~}{~}{}{\HCode{<br/>}}
+%% \ConfigureToc{likesection}{~~~}{~}{}{\HCode{<br/>}}
+
+% \TocAt*{chapter}
+
+\ConfigureEnv{dedication}
+  {\HCode{<div data-role="page" id="dedication"><div data-role="content">}}
+  {\HCode{</div>} \input{footer} \HCode{</div><!-- end of dedication -->}}
+  {}
+  {}
+
+\Configure{maketitle}
+  {\HCode{<div data-role="page" id="titlepage"><div data-role="content">}}
+  {\HCode{</div>} \input{footer} \HCode{</div><!-- end of titlepage -->}}
+  {} 
+  {}
+
+% same configuration for chapter and likechapter (chapter*, ie foreword and appendices)
+
+\Configure{chapter}
+  {\HCode{<div data-role="page" id="chapter_\thechapter">
+           <div data-role="content"> <h2 class="chapterhead">} \thechapter. }
+  {}
+  {}
+  {\HCode{</h2>}}
+
+\Configure{likechapter}
+  {\HCode{<!-- likechapter --><div data-role="page" id="chapter_\thechapter">
+           <div data-role="content"> <h2 class="chapterhead">} Foreword}
+  {}
+  {}
+  {\HCode{</h2>}}
+
+\Configure{appendix}
+  {\HCode{<!-- appendix --><div data-role="page" id="chapter_\thechapter">
+           <div data-role="content"> <h2 class="chapterhead">} \thechapter. }
+  {}
+  {}
+  {\HCode{</h2>}}
+
+\ConfigureEnv{chapterfrontmatter}
+  {}
+  {\HCode{</div>} \input{footer} \HCode{</div><!-- end chapter frontmatter -->}}
+  {}
+  {}
+
+\Configure{section}
+  {\HCode{<div data-role="page" id="section_\thesection">
+           <div data-role="content">
+             <h3 class="sectionhead">}\thesection }
+  {\HCode{ </div><!-- end of section content -->}
+     \input{footer}
+   \HCode{</div><!-- end of section -->}}
+  { }
+  {\HCode{</h3>}}
+
+\Configure{likesection}
+  {\HCode{<div data-role="page" id="section_\thesection">
+           <div data-role="content">
+             <h3 class="sectionhead">}}
+  {\HCode{</div><!-- end of section content -->}
+     \input{footer}
+   \HCode{</div><!-- end of section -->}}
+  { }
+  {\HCode{</h3>}}
+
+\Configure{caption}
+   {\HCode{<div class="caption">}}
+   {: }
+   {}
+   {\HCode{</div>}}

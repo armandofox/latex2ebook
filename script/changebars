@@ -1,0 +1,41 @@
+#!/usr/bin/perl
+
+sub help {
+    printf STDERR <<Help;
+$0: add changebars to LaTeX files
+Usage:  $0 add '<refspec>' filename.tex - add changebars to filename.tex
+          '<refspec>' is a Git commit ID or reference, such as 'master\@{2 days ago}'
+        $0 remove filename.tex - remove changebars from filename.tex
+Original file will be left in filename.tex.bak
+Help
+exit 0;
+}
+
+
+($what, $rev, $file) = @ARGV;
+$file = $rev if $what =~ /remove/;
+&help if $#ARGV==0 || grep(/--?h/, @ARGV) || !$file || !-r $file ;
+    
+$has_changebars = (system("grep \\\\cbstart $file >/dev/null") == 0);
+
+if ($what =~ /^remove$/) {
+    die "$file has no changebars\n" unless $has_changebars;
+    system "sed -e s/\\\\\\\\cbstart{}//g -e s/\\\\\\\\cbend{}//g -i.bak $file";
+    printf STDERR "Change bars removed from $file\n";
+    exit 0;
+}
+
+# ensure file doesn't already have changebars!
+die "$file already has change bars! Remove them first\n" if $has_changebars;
+
+open(CMD, "GIT_DIFF_OPTS='-u0 --ignore-all-space' git diff '$rev' $file |") or die $!;
+$nchangebars = 0;
+while (<CMD>) {
+    next unless /^@@ -[0-9,]+ \+([0-9]+),?([0-9]+)?/;
+    $start = $1;
+    $end  = $start + ($2 || 0);
+    $cmd = "sed -e ${start}s/^/\\\\\\\\cbstart{}/ -e  ${end}s/\$/\\\\\\\\cbend{}/ -i.bak $file";
+    $nchangebars++ unless system($cmd)!=0;
+}
+printf STDERR "$nchangebars changebars added to $file\n";
+

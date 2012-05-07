@@ -1,0 +1,29 @@
+\usepackage{color}
+\usepackage{textcomp} % needed for 'upquote' option below
+\definecolor{ListingColor}{RGB}{248,248,248}
+\lstset{ %
+  language=Ruby,                % the language of the code
+  upquote=true,                 % use straight quotes not curly quotes
+  basicstyle=\scriptsize\ttfamily\upshape,       % the size and style of the fonts that are used for the code
+  commentstyle=\slshape,
+  xrightmargin=0.1in,
+  xleftmargin=0.2in,
+  numbers=left,                   % where to put the line-numbers
+  numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+  stepnumber=1,                   % the step between two line-numbers. If it's 1, each line 
+  % will be numbered
+  numbersep=8pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{ListingColor},  % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=trbL,                   % adds a frame around the code
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  %title=\lstname,                 % show the filename of files included with \lstinputlisting;
+  % also try caption instead of title
+  escapeinside={\%*}{*)},         % if you want to add a comment within your code
+  morekeywords={*,...}            % if you want to add more keywords to the set
+}

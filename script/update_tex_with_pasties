@@ -1,0 +1,8 @@
+# call with ruby -p -i.bak
+BEGIN {
+  require 'yaml'
+  $p = YAML.load_file(ENV['PASTIE_FILE_NAME'] || 'pasties.yml')
+  PAT = /\\codefile(figure)?\s*(?:\[\w*\])?\{([^}]+)\}/
+}
+$_.gsub!(PAT, "\\codefile#{$1}[#{$p[$2]['url']}]{#{$2}}") if $_ =~ PAT && $p.has_key?($2)
+
