@@ -1,0 +1,37 @@
+%%%%%% don't change this stuff:
+
+\thispagestyle{empty}%
+\ifhtmloutput
+  \ifmobioutput
+    \HCode{<mbp:pagebreak/>}
+  \else
+    \subsubsection*{}
+    \HCode{<div data-role="page" id="cip"> <div data-role="content">}
+  \fi
+\fi
+
+%%%%%% change to match the stuff you want on your frontmatter page:
+
+Copyright 2012 by Me.
+
+No part of this book or its related materials may be reproduced in any
+form without the written consent of the copyright holder.
+
+\vfill
+
+This print book and ebook were prepared with \LaTeX{},
+\texttt{tex4ht}, and Ruby scripts employing Nokogiri, written by Armando Fox
+and put out there because he is so awesome.    
+Check it out yourself at
+\texttt{http://github.com/saasbook/latex2ebook}.
+
+%%%%% don't touch below here
+
+\ifhtmloutput
+  \ifmobioutput
+    \HCode{<mbp:pagebreak/>}
+  \else
+    \input{footer}%
+    \HCode{</div><!-- page -->}%
+  \fi
+\fi

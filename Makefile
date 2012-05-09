@@ -145,9 +145,7 @@ fulltags:
 veryclean: clean clean_figs 
 
 clean_docs:
-	rm -f book_pdf.pdf  $(ROOT).pdf
-	rm -f book_html.html $(ROOT).html
-	rm -f book_mobi.html $(ROOT).mobi
+	rm -f book_pdf.pdf  book_html.html  book_mobi.html
 
 clean_figs:
 	rm -f ch_*/figs/*_SB.* ch_*/figs/*.pdf.gif ch_*/figs/*.jpg.gif icons/*_SB.*
@@ -158,7 +156,7 @@ only.tex \
 *.bbl *.dvi *.idx *.ilg *.ind *.out *.ist *.bak \
 *.cb *.cb2 *.glo *.glg *.gls *.mtc* bu*.blg \
 book_*.{ps,ent,blg,toc,4ct,4tc,xref,idv,lg,tmp,css,lof,lot,lg,xref,ncx,maf} \
-book_html*.gif zz$(ROOT)* book_mobi*x.png \
+book_html*.gif zzbook* book_mobi*x.png \
 book_html{ch,ap,li}*.html
 	find . -name '*.bak' -or -name '*~' -or -name '*.log' -or -name '*.aux' | xargs rm -f
 

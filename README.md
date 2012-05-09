@@ -86,13 +86,21 @@ Setup
 Adding LaTeX files and assets
 =============================
 
-RECOMMENDED: if you add your book content according to the following
-structure, you won't need any Makefile changes.  If you follow your own
-structure, you'll need to make substantial changes to the Makefile and
-to common.tex.
+If you add your book content according to the following structure, you
+won't need any Makefile changes.  If you follow your own structure,
+you'll need to make substantial changes to the Makefile and to
+common.tex.  Unless you want to burn a lot of time on this, do it my
+way.
 
-Edit the file common.tex, which will serve as your toplevel file, by
-searching for ::EDITME:: 
+In each of the following files, search for ::EDITME:: and edit the
+self-explanatory metadata:
++  common.tex
++ book_mobi.ncx.erb
++ book_mobi.opf
+
+Add a cover file for the Kindle version called cover.jpeg in the top
+level directory.  Ideally, it should be 600 pixels wide by 800 pixels
+wide at 72 dpi.
 
 Add your book chapters, each in its own subdirectory, organized as
 follows for a chapter called mychap:
@@ -101,4 +109,8 @@ ch_mychap/
 ch_mychap/mychap.tex  - toplevel file for that chapter
 ch_mychap/figs/      - figures (.pdf files ONLY--see below)
 ch_mychap/tables/    - tables (usually just .tex files)
+ch_mychap/code/    - tables (usually just .tex files)
+
+IMPORTANT: you should include ALL the subdirs figs, tables, code for
+each chapter, even if empty, or some Makefile rules will break!
 

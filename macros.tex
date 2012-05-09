@@ -1,14 +1,17 @@
-\setcounter{errorcontextlines}{400}
-
 % line breaking tolerances
 \tolerance=1000  % usually 200, infinite=10000
 % last ditch effort: how much space OK to insert
 %   in a line to avoid overfull
 \setlength{\emergencystretch}{3em}  
 
-% write metadata about screencasts to output file
-\newwrite\screencastdata
-\openout\screencastdata=\jobname.screencasts
+\newcommand{\sidebarfont}{%
+  \fontencoding{\encodingdefault}%
+  \fontfamily{phv}%
+  \fontseries{mc}%
+  \fontshape{\shapedefault}%
+  \footnotesize
+  \selectfont}
+
 
 \ifhtmloutput
 %    \newcommand{\mtctitle}{}
@@ -250,20 +253,20 @@
 % or \lstlisting to decorate it with styling and line numbers for PDF
 \ifhtmloutput
  \ifmobioutput
-  \newcommand{\codefile}[2][u/saasbook]{\HCode{<a class="pastebin" href="http://pastebin.com/#1">http://pastebin.com/#1</a><br/><pre class="code">}
+  \newcommand{\codefile}[2][\pastebinbase]{\HCode{<a class="pastebin" href="http://pastebin.com/#1">http://pastebin.com/#1</a><br/><pre class="code">}
 
     \begin{minipage}{\textwidth}% prevent gratuitous blank lines
     \verbatiminput{#2}%
     \end{minipage}%
     \HCode{</pre><hr>}}
  \else
-  \newcommand{\codefile}[2][u/saasbook]{\HCode{<a class="pastebin" href="http://pastebin.com/#1">http://pastebin.com/#1</a><pre class="code">}
+  \newcommand{\codefile}[2][\pastebinbase]{\HCode{<a class="pastebin" href="http://pastebin.com/#1">http://pastebin.com/#1</a><pre class="code">}
     \verbatiminput{#2}
 
     \HCode{</pre>}}
  \fi 
 \else
-  \newcommand{\codefile}[2][u/saasbook]{%
+  \newcommand{\codefile}[2][\pastebinbase]{%
     \noindent\begin{minipage}{\textwidth}%
     \Sf{\scriptsize{}http://pastebin.com/#1}%
     \vspace{-1ex}%
@@ -271,54 +274,6 @@
     \end{minipage}}
 \fi
 
-% Fallacies and pitfalls
-%  \begin{fallacy}{The moon is made of green cheese.}
-%    It really isn't.
-%  \end{fallacy}
-
-\ifhtmloutput
-  \newcommand{\fallaciesandpitfalls}{}
-\else
-  \newcommand{\fallaciesandpitfalls}{%
-  ~\vspace{-1.5ex}
-
-  }
-\fi
-
-\ifhtmloutput
- \ifmobioutput
-  \newenvironment{fallacy}[1]%
-    {\HCode{<img src="icons/mobi/fallacy.png"><span style="font-weight: bold; color: red;">Fallacy: }#1\HCode{</span> }}
-    {}
-  \newenvironment{pitfall}[1]%
-    {\HCode{<img src="icons/mobi/pitfall.png"><span style="font-weight: bold; color: red;">Pitfall: }#1\HCode{</span> }}
-    {}
- \else
-  \newenvironment{fallacy}[1]{\Picture{icons/fallacy.png class="marginicon"}\B{\emph{Fallacy:} #1}}{}
-  \newenvironment{pitfall}[1]{\Picture{icons/pitfall.png class="marginicon"}\B{\emph{Pitfall:} #1}}{}
- \fi
-\else
-  \newcommand{\iconwithtext}[3]{%
-     \vspace{1ex}%
-     \hspace{-\parindent}%
-     \begin{tabular}{b{0.25in}b{4.5in}}%
-       \includegraphics[width=0.25in]{icons/#1} & \B{\emph{#2: }\/#3} \\ %
-     \end{tabular}%
-     \vspace{1ex}}
-  \newenvironment{fallacy}[1]%
-    {\iconwithtext{fallacy.pdf}{Fallacy}{#1}
-
-    }
-    {\vspace{0.5ex}}
-  \newenvironment{pitfall}[1]%
-    {\iconwithtext{pitfall.pdf}{Pitfall}{#1}
-
-    }
-    {\vspace{0.5ex}}
-\fi
- 
-% Pull in Exercises
-\newcommand{\exercises}[1]{\input{ch_#1/exercises_#1}}
                        
 % Screencast - in print version, just a URL link; in HTML5 version,
 % embedded quicktime player or youtube player??
@@ -457,7 +412,7 @@
 \newcommand{\note}[1]{\fbox{#1}}
 
 % DRYing out codefile examples
-\newcommand{\codefilefigure}[4][u/saasbook]{%  filename, reflabel, caption
+\newcommand{\codefilefigure}[4][\pastebinbase]{%  filename, reflabel, caption
   \begin{figure}
   \codefile[#1]{#2}
   \caption{\label{#3}
@@ -466,31 +421,6 @@
   \end{figure}%
 }
 
-% Crosscutting themes - icon or note in margin
-\ifhtmloutput
- \ifmobioutput
-  \newcommand{\crosscutting}[2]{%
-    \HCode{<img align="right" width="40" src="icons/mobi/#2.png"/>&nbsp;}}
- \else
-  \newcommand{\crosscutting}[2]{%
-    \HCode{<img class="crosscutting" src="icons/#2.png"/>&nbsp;}}
- \fi
-\else
-  \newcommand{\crosscutting}[2]{%
-    \marginpar{\vspace{#1}\includegraphics[width=0.5in]{icons/#2.png}}}
-\fi
-\newcommand{\dry}[1][0.5ex]{\crosscutting{#1}{dry}}
-\newcommand{\reuse}[1][0.5ex]{\crosscutting{#1}{reuse}}
-\newcommand{\codegen}[1][0.5ex]{\crosscutting{#1}{codegen}}
-\newcommand{\concise}[1][0.5ex]{\crosscutting{#1}{concise}}
-\newcommand{\coc}[1][0.5ex]{\crosscutting{#1}{coc}}
-\newcommand{\legacy}[1][0.5ex]{\crosscutting{#1}{legacy}}
-\newcommand{\beauty}[1][0.5ex]{\crosscutting{#1}{beauty}}
-\newcommand{\tool}[1][0.5ex]{\crosscutting{#1}{tool}}
-\newcommand{\learnbydoing}[1][0.5ex]{\crosscutting{#1}{learnbydoing}}
-\newcommand{\automation}[1][0.5ex]{\crosscutting{#1}{automation}}
-
-% ``Learn by doing''
 
 % Table of contents formatting
 \setcounter{tocdepth}{5}

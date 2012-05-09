@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   The unique identifier in <package unique-identifier=”XYZ”> is a reference to
+   the identifier specified in <metadata> as <dc:Identifier id=”XYZ”>.
+  -->
+<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="BookId">
+
+  <!--
+     Metadata:
+     The required metadata element is used to provide information about the publication
+     as a whole.
+     
+     For detailed info visit: http://www.idpf.org/2007/opf/OPF_2.0_final_spec.html#Section2.2
+    -->
+  
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+    
+    <!-- Title [mandatory]: The title of the publication. This is the title that will appear on the "Home" screen. -->
+    
+    <!-- ::EDITME:: Book title -->
+    <dc:title>
+    Book Title Here
+    </dc:title>
+    
+    <!-- Language [mandatory]: the language of the publication. The language codes used are the same as in XML
+         and HTML. The full list can be found here: http://www.w3.org/International/articles/language-tags/
+      -->
+    <dc:language>en</dc:language>
+
+    <!-- Cover [mandatory]. The cover image must be specified in <manifest> and referenced from
+         this <meta> element with a name="cover" attribute.
+      -->
+    <meta name="cover" content="My_Cover" />
+    
+    <!-- The ISBN of your book goes here -->
+    
+    <!-- ::EDITME:: ISBN number -->
+    <dc:identifier id="BookId" opf:scheme="ISBN">9780984881208</dc:identifier>
+
+    
+    <!-- The author of the book. For multiple authors, use multiple <dc:Creator> tags.
+         Additional contributors whose contributions are secondary to those listed in
+         creator  elements should be named in contributor elements.
+      -->
+    <!-- ::EDITME:: authors, one per dc:creator tag -->
+    <dc:creator>Author 1</dc:creator>
+    <dc:creator>Author 2</dc:creator>
+    
+   
+    <!-- ::EDITME:: Publisher - entity responsible for resource -->
+    <dc:publisher>My Cool Company LLC</dc:publisher>
+    
+    <!-- ::EDITME:: pick subject code according to
+         http://www.bisg.org/what-we-do-20-73-bisac-subject-headings-2008-edition.php
+      --> 
+    <dc:BASICCode>COM051230</dc:BASICCode>
+    
+    <!-- ::EDITME:: Date of publication in YYYY-MM-DD format. (Days and
+         month can be omitted). 
+         Standard to follow: http://www.w3.org/TR/NOTE-datetime
+      -->
+    <dc:date>2012-01-01</dc:date>
+
+    <!-- ::EDIMTE:: A short description of the publication's content. -->
+    <dc:description>
+      A college course in philosophy.
+    </dc:description>
+    
+  </metadata>
+
+  <!--
+     Manifest:
+     The required manifest must provide a list of all the files that are part of the
+     publication (e.g. Content Documents, NCX table of contents, image files, CSS style sheets).
+     Kindlegen however does not require CSS and images to be specified in the manifest if they
+     are referenced from the content HTML.
+     The manifest element must contain one or more item elements with the following media-type attributes:
+     
+     text/x-oeb1-document      HTML content files
+     application/x-dtbncx+xml  NCX table of contents
+     image/jpeg                JPEG image
+     image/GIF                 GIF image
+     
+     For detailed info visit: http://www.idpf.org/2007/opf/OPF_2.0_final_spec.html#Section2.3
+    -->
+
+  <manifest>
+    <!-- HTML content files [mandatory] -->
+    <item id="item1" media-type="application/xhtml+xml" href="book_mobi.html"></item>
+    <!-- table of contents [mandatory] -->
+    <item id="My_Table_of_Contents" media-type="application/x-dtbncx+xml" href="book_mobi.ncx"/>
+    <!-- cover image [mandatory] -->
+    <item id="My_Cover" media-type="image/jpeg" href="cover.jpeg"/>
+  </manifest>
+
+  <!--
+     Spine:
+     Following manifest, there must be one and only one spine element, which contains one
+     or more itemref elements. Each itemref references an document designated
+     in the manifest. The order of the itemref elements organizes the associated content
+     files into the linear reading order of the publication.
+     
+     The toc attribute refers to the id ref of the NCX file specified in the manifest.
+     
+     For detailed info visit: 
+     http://www.idpf.org/2007/opf/OPF_2.0_final_spec.html#Section2.4
+     http://www.niso.org/workrooms/daisy/Z39-86-2005.html#NCX
+    -->
+  
+  <spine toc="My_Table_of_Contents">
+    <!-- the spine defines the linear reading order of the book -->
+    <itemref idref="item1"/>
+  </spine>
+
+  <!--
+     Guide:
+     Within the package there may be one guide element, containing one or more reference elements.
+     The guide element identifies fundamental structural components of the publication, to enable
+     Reading Systems to provide convenient access to them.
+     
+     For detailed info visit: http://www.idpf.org/2007/opf/OPF_2.0_final_spec.html#Section2.6
+     
+     The Kindle reading system support two special guide items which are both mandatory.
+     type="toc"  [mandatory]: a link to the HTML table of contents
+     type="text" [mandatory]: a link to where the content of the book starts (typically after the front matter)
+     
+     Kindle reading platforms need both thede guid items to provide a consistent user enxperience to the user.
+     
+     It is good practice to include both a logical table of contents (NCX) and an HTML table of contents
+     (made of hyperlinks). The NCX enables various advanced navigation features but the HTML table of
+     contents can easily be discovered by the user by paging through the book. Both are useful.
+     
+    -->
+  
+  <guide>
+    <reference type="toc" title="Table of Contents" href="book_mobi.html#TOC"></reference>
+    <reference type="text" title="Welcome" href="book_mobi.html#start"></reference>
+  </guide>
+
+</package>

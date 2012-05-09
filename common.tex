@@ -1,6 +1,14 @@
 % book version - referenced by some other macros, but optional for you
 \newcommand{\bookversion}{1.0}
 
+% ::EDITME::
+% If you're using Pastebin integration (see docs) or screencast
+% integration (see docs), change these to the base URI of your account
+% on Pastebin or Vimeo.  If this makes no sense to you, leave this
+% alone.
+\newcommand{\pastebinbase}{}
+\newcommand{\vimeobase}{}
+
 %  load macros, some of which depend on the above switches
 \input{macros}
 
@@ -45,7 +53,7 @@
 
   \ifhtmloutput
     % define XHTML outputs for different book elements
-    \ifmobioutput \input{mobi.4ht} \else \input{html.4ht} \fi %
+    \ifmobioutput \input{book_mobi.4ht} \else \input{book_html.4ht} \fi %
   \else
     %
   \fi
@@ -68,12 +76,12 @@
   % bibliography per-chapter (requires bibunits package)
   \defaultbibliographystyle{abbrvnat}
   \bibpunct{}{}{;}{a}{}{,}
-  \defaultbibliography{saasbook}
+  \defaultbibliography{book}
   \bibliographyunit[\chapter]
 
   % ::EDITME::
   % Add your chapters here:
-  % \include{ch_foreword/foreword} 
+  \include{ch_example/example}
   % \include{ch_intro/intro} 
   %  etc.
   % all chapters after the \appendix directive are treated as appendices:

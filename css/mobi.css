@@ -1,0 +1,30 @@
+h2.chapter_name {
+   font-style: italic;
+}
+
+.caption {
+   background-color: grey;
+   font-size: small;
+}
+
+.elaboration_name, .sidebar_name {
+   font-style: italic;
+   font-weight: bold;
+}
+
+p .marginicon {
+    clear: both;
+    float: left;
+}
+
+div.sidebar img {
+  display: block;
+  width: 200px;
+   align: right;
+}
+img.marginicon {
+   width: 40px;
+   align: left;
+}
+
+span { display: inline; }
