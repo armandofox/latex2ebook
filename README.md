@@ -82,6 +82,18 @@ Setup
 1. With Ruby 1.9.2+ installed, cd to the script/ subdirectory and run
 'bundle install' to make sure the Nokogiri gem is available.
 2. In Makefile, change KINDLEGEN to the path to your kindlegen script.
+3. In Makefile, change the paths to various other binaries as needed.
+4. In each of the following files, search for ::EDITME:: and edit the
+self-explanatory metadata:
++  common.tex
++ book_mobi.ncx.erb
++ book_mobi.opf
+5. Add a cover file for the Kindle version called cover.jpeg in the top
+level directory.  Ideally, it should be 600 pixels wide by 800 pixels
+wide at 72 dpi.  A sample is included.  
+
+IMPORTANT: The .mobi ebook file WILL NOT BUILD unless you at least have
+dummy values/files for all of the above.  
 
 Adding LaTeX files and assets
 =============================
@@ -91,16 +103,6 @@ won't need any Makefile changes.  If you follow your own structure,
 you'll need to make substantial changes to the Makefile and to
 common.tex.  Unless you want to burn a lot of time on this, do it my
 way.
-
-In each of the following files, search for ::EDITME:: and edit the
-self-explanatory metadata:
-+  common.tex
-+ book_mobi.ncx.erb
-+ book_mobi.opf
-
-Add a cover file for the Kindle version called cover.jpeg in the top
-level directory.  Ideally, it should be 600 pixels wide by 800 pixels
-wide at 72 dpi.
 
 Add your book chapters, each in its own subdirectory, organized as
 follows for a chapter called mychap:

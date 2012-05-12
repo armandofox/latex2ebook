@@ -6,7 +6,7 @@ BIBTEX = bibtex
 PERL = 	perl
 RUBY =  ruby
 ERB = erb
-KINDLEGEN = kindlegen # MacOS: /Applications/kindlegen
+KINDLEGEN = /Applications/kindlegen
 CONVERT = convert
 AVCONVERT = avconvert
 
